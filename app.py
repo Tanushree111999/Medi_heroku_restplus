@@ -48,19 +48,22 @@ def clean_text(raw_phrase):
     joined_words = ( " ".join( stemmed_words ))
     return joined_words
 
+@app.route('/')
+def home():
+	return "Welcome"
 
 class PredictAilment(Resource):
-    def post(self):
-        input_text = request.args.get('message')
-        input_phrase_clean = [input_text]
-        input_phrase_clean = clean_text(input_text)
-        input_phrase_clean = [input_phrase_clean]
-        input_data_features = vect.transform(input_phrase_clean)
-        input_data_features = input_data_features.toarray()
-        input_data_tfidf_features = tfidf.fit_transform(input_data_features)
-        input_data_tfidf_features = input_data_tfidf_features.toarray()
-        my_prediction = model.predict(input_data_tfidf_features).tolist()
-        return jsonify({'prediction' : my_prediction})
+	def post(self):
+		input_text = request.args.get('message')
+		input_phrase_clean = [input_text]
+		input_phrase_clean = clean_text(input_text)
+		input_phrase_clean = [input_phrase_clean]
+		input_data_features = vect.transform(input_phrase_clean)
+		input_data_features = input_data_features.toarray()
+		input_data_tfidf_features = tfidf.fit_transform(input_data_features)
+		input_data_tfidf_features = input_data_tfidf_features.toarray()
+		my_prediction = model.predict(input_data_tfidf_features).tolist()
+		return jsonify({'prediction' : my_prediction})
 
 api.add_resource(PredictAilment,'/predict')
 
